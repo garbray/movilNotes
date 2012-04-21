@@ -19,6 +19,10 @@ var NotesApp = (function() {
     }
   });
 
+  var NodeList = Backbone.Collection.extend({
+
+  });
+
   //views
   var newFormView = Backbone.View.extend({
     events: {
