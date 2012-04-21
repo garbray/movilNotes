@@ -5,22 +5,22 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1"> 
 
 	<link rel="stylesheet" type="text/css" href="css/jquery.mobile-1.1.0.css" title="Jquery mobile"/>
-
-
-	<script type="text/javascript" src="js/jquery-1.7.1.js"></script>
-	
-	<script type="text/javascript" src="js/jquery.mobile-1.1.0.js"></script>
-	<script type="text/javascript" src="js/application.js"></script>
+	<script type="text/javascript" src="js/jquery-1.7.1.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/underscore.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/backbone.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/backbone.localStorage.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/jquery.mobile-1.1.0.js" charset="utf-8"></script>
+	<script type="text/javascript" src="js/application.js" charset="utf-8"></script>
 	<title>Local Notes</title>
 </head>
 <body>
 	<!-- 	
-	home 
+		home 
 	-->
 	<div id="home" data-role="page">
 		<div data-role="header">
 			<h1>Local Notes</h1>
-			<a href="#new" data-role="button" data-rel="dialog" data-transition="flip"  data-icon="plus" class="ui-btn-right">New</a>
+			<a href="#new" data-role="button" data-rel="dialog" data-transition="pop"  data-icon="plus" class="ui-btn-right">New</a>
 		</div>
 		<div data-role="content">
 			<a href="#new" data-role="button" data-rel="dialog" data-transition="flip" data-icon="plus" data-theme="b">New Note</a>
@@ -32,11 +32,12 @@
 		</div>
 	</div>
 
-	<!--form -->
+	<!--
+		form 
+	-->
 	<div id="new"data-role="page">
 		<div data-role="header">
-			<h1>New Note</h1>
-			<a href="#home" data-role="button" data-icon="back">back</a>	
+			<h1>New Note</h1>	
 		</div>
 		<div data-role="content">
 			<form action="#" method="post">
@@ -50,6 +51,20 @@
 				</div>
 				<button data-icon="check" data-theme="b">Save</button>
 			</form>
+		</div>
+	</div>
+	<!-- 
+		all notes
+	 -->
+	 <div id="all"data-role="page">
+		<div data-role="header">
+			<a href="#home" data-role="button" data-icon="back">back</a>
+			<h1>All Notes</h1>	
+		</div>
+		<div data-role="content">
+			<ul id="all_notes" data-role="listView">
+
+			</ul>
 		</div>
 	</div>
   </div>
