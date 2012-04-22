@@ -2,8 +2,10 @@ var NotesApp = (function() {
 
   var App = {
     stores:{},
-    views:{}
+    views:{},
+    collections:{}
   }
+  //initialize localstorage data store
   App.stores.notes = new Store('notes');
 
   //note Model
@@ -11,7 +13,7 @@ var NotesApp = (function() {
     localStorage : App.stores.notes,
     initialize: function(){
       if(!this.get('title')){
-        this.set({title: "Note @"+Date()})
+        this.set({title: "Note @ "+Date()})
       };
       if(!this.get('body')){
         this.set({body: "No content"})
@@ -19,22 +21,34 @@ var NotesApp = (function() {
     }
   });
 
-  var NodeList = Backbone.Collection.extend({
-
-  });
+  var NoteList = Backbone.Collection.extend({
+    // This collection is composed of Note objects
+    model: Note,
+    
+    // Set the localStorage datastore
+    localStorage: App.stores.notes,
+    
+    initialize: function(){
+      var collection = this;
+      
+      // When localStorage updates, fetch data from the store
+      this.localStorage.bind('update', function(){
+        collection.fetch();
+      })
+    }
+    
+  })
 
   //views
   var newFormView = Backbone.View.extend({
     events: {
-      "submit":"createNote"
+      "submit form":"createNote"
     },
     createNote: function(e){
-      var attr = this.getAttributes(),
+      var attrs = this.getAttributes(),
           note = new Note();
-          console.log(note);
 
-
-      note.set(attr);
+      note.set(attrs);
       note.save();
 
       //stop browser for actually submiting the form
@@ -60,14 +74,61 @@ var NotesApp = (function() {
     }
   });
 
+  var noteListView = Backbone.View.extend({
+    
+    initialize: function(){
+      _.bindAll(this, 'addOne', 'addAll');
+      
+      this.collection.bind('add', this.addOne);
+      this.collection.bind('refresh', this.addAll);
+      
+      this.collection.fetch();
+    },
+    
+    addOne: function(note){
+      var view = new noteListItemView({model: note});
+      $(this.el).append(view.render().el);
+    },
+    
+    addAll: function(){
+      $(this.el).empty();
+      this.collection.each(this.addOne);
+    }
+    
+    
+  });
+
+  var noteListItemView = Backbone.View.extend({
+    tagName: 'LI',
+    template: _.template($('#note-list-item-template').html()),
+    
+    initialize: function(){
+      _.bindAll(this, 'render')
+      
+      this.model.bind('change', this.render)
+    },
+    
+    render: function(){
+      $(this.el).html(this.template({ note: this.model }))
+      return this;
+    }
+    
+  })
 
   window.Note = Note;
 
-  $(document).ready(function(){
-    App.views.new_form = new newFormView({
-      el: $('#new')
-    });
-  })
+
+  App.views.new_form = new newFormView({
+    el: $('#new')
+  });
+
+   App.collections.all_notes = new NoteList();
+
+  App.views.list_alphabetics = new noteListView({
+    el: $('#all_notes'),
+    collection: App.collections.all_notes
+  });
+  
   
   return App;
 })()
