@@ -78,7 +78,7 @@ var NotesApp = (function() {
     
     initialize: function(){
       _.bindAll(this, 'addOne', 'addAll');
-      
+ 
       this.collection.bind('add', this.addOne);
       this.collection.bind('refresh', this.addAll);
       
@@ -88,10 +88,15 @@ var NotesApp = (function() {
     addOne: function(note){
       var view = new noteListItemView({model: note});
       $(this.el).append(view.render().el);
+
+      if('mobile' in $){
+        $(this.el).listview('refresh');
+      }
     },
     
     addAll: function(){
       $(this.el).empty();
+
       this.collection.each(this.addOne);
     }
     
